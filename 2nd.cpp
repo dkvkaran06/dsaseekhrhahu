@@ -1,19 +1,23 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 int main()
 {
     int n;
     cin>>n;
-    int i=1;
-    while(i<=n)
+    int i=1;;
+    for(;;) /// we want to tell we can run without using
+    //those init,condn,updt
     {
-        int j=1;
-        while(j<=n)
+        if(i<=n)
         {
-            cout<<n-j+i<<" ";
-            j=j+1;
+            cout<<i<<endl;
         }
-        cout<<endl;
-        i=i+1;
+        else
+        {
+            break;// this break will direclty bring you out
+            // of loop at line 21
+        }
+        i++;
     }
+    
 }

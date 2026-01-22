@@ -1,19 +1,24 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 int main()
 {
-    int n;
-    cin>>n;
-    int i=1;
-    while(i<=n)
-    {
-        int j=1;
-        while(j<=n)
-        {
-            cout<<j<<" ";
-            j=j+1;
-        }
-        cout<<endl;
-        i=i+1;
-    }
+    int a=4;
+    int b=6;
+    cout<<(a&b)<<endl;// likhna to braces me hi idhar precedence error h
+    cout<<(a|b)<<endl;
+    cout<<(~a)<<endl;
+    cout<<(a^b)<<endl;
+    ////////
+    cout<<(17>>1)<<endl;
+    cout<<(17>>2)<<endl;
+    cout<<(19<<1)<<endl;
+    cout<<(21<<2)<<endl;
+    /////
+    int i=7;
+    cout<<(++i)<<endl;
+    cout<<(i++)<<endl;
+    cout<<(i--)<<endl;
+    cout<<(--i)<<endl;
+    cout<<i;
+
 }

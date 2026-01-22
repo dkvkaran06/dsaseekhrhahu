@@ -1,12 +1,14 @@
-void reverse(int arr[],int size)
-{
-    int s=0;
-    int e= size-1;
-    while(s<e)
-    {
-        swap(arr[s],arr[e]);
-        s++;
-        e--;
-
-    }
-}
+ // for(;;) /// we want to tell we can run without using
+    // //those init,condn,updt
+    // {
+    //     if(i<=n)
+    //     {
+    //         cout<<i<<endl;
+    //     }
+    //     else
+    //     {
+    //         break;// this break will direclty bring you out
+    //         // of loop at line 21
+    //     }
+    //     i++;
+    // }
