@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-tab {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(45deg, #764ba2, #667eea);
+            transform: scale(1.05);
+        }
+
+        .section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status.available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.borrowed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Library Management System</h1>
+            <p>Manage your library efficiently with our modern system</p>
+            
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showSection('dashboard')">Dashboard</button>
+                <button class="nav-tab" onclick="showSection('books')">Books</button>
+                <button class="nav-tab" onclick="showSection('members')">Members</button>
+                <button class="nav-tab" onclick="showSection('transactions')">Transactions</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section active">
+            <h2>📊 Dashboard</h2>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalBooks">0</div>
+                    <div class="stat-label">Total Books</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalMembers">0</div>
+                    <div class="stat-label">Total Members</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="borrowedBooks">0</div>
+                    <div class="stat-label">Borrowed Books</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="overdueBooks">0</div>
+                    <div class="stat-label">Overdue Books</div>
+                </div>
+            </div>
+
+            <h3>📈 Recent Activity</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Action</th>
+                            <th>Book</th>
+                            <th>Member</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentActivity">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #999;">No recent activity</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Books Section -->
+        <div id="books" class="section">
+            <h2>📚 Book Management</h2>
+            
+            <div class="form-container">
+                <h3>Add New Book</h3>
+                <form id="bookForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookTitle">Title *</label>
+                            <input type="text" id="bookTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookAuthor">Author *</label>
+                            <input type="text" id="bookAuthor" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookISBN">ISBN</label>
+                            <input type="text" id="bookISBN">
+                        </div>
+                        <div class="form-group">
+                            <label for="bookGenre">Genre</label>
+                            <select id="bookGenre">
+                                <option value="">Select Genre</option>
+                                <option value="Fiction">Fiction</option>
+                                <option value="Non-Fiction">Non-Fiction</option>
+                                <option value="Mystery">Mystery</option>
+                                <option value="Romance">Romance</option>
+                                <option value="Sci-Fi">Science Fiction</option>
+                                <option value="Biography">Biography</option>
+                                <option value="History">History</option>
+                                <option value="Technology">Technology</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookYear">Publication Year</label>
+                            <input type="number" id="bookYear" min="1000" max="2025">
+                        </div>
+                        <div class="form-group">
+                            <label for="bookCopies">Number of Copies</label>
+                            <input type="number" id="bookCopies" min="1" value="1">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Add Book</button>
+                </form>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="bookSearch" class="search-input" placeholder="🔍 Search books by title, author, or genre...">
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Genre</th>
+                            <th>Year</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="booksTable">
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: #999;">No books added yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Members Section -->
+        <div id="members" class="section">
+            <h2>👥 Member Management</h2>
+            
+            <div class="form-container">
+                <h3>Add New Member</h3>
+                <form id="memberForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="memberName">Full Name *</label>
+                            <input type="text" id="memberName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="memberEmail">Email *</label>
+                            <input type="email" id="memberEmail" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="memberPhone">Phone Number</label>
+                            <input type="tel" id="memberPhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="memberType">Member Type</label>
+                            <select id="memberType">
+                                <option value="Regular">Regular</option>
+                                <option value="Student">Student</option>
+                                <option value="Faculty">Faculty</option>
+                                <option value="Senior">Senior</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Add Member</button>
+                </form>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="memberSearch" class="search-input" placeholder="🔍 Search members by name or email...">
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Type</th>
+                            <th>Books Borrowed</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTable">
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: #999;">No members registered yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Transactions Section -->
+        <div id="transactions" class="section">
+            <h2>📋 Transaction Management</h2>
+            
+            <div class="form-container">
+                <h3>Borrow/Return Book</h3>
+                <form id="transactionForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="transactionType">Transaction Type</label>
+                            <select id="transactionType" required>
+                                <option value="">Select Type</option>
+                                <option value="borrow">Borrow Book</option>
+                                <option value="return">Return Book</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="selectMember">Member</label>
+                            <select id="selectMember" required>
+                                <option value="">Select Member</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="selectBook">Book</label>
+                            <select id="selectBook" required>
+                                <option value="">Select Book</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dueDate">Due Date</label>
+                            <input type="date" id="dueDate">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Process Transaction</button>
+                </form>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="transactionSearch" class="search-input" placeholder="🔍 Search transactions...">
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Member</th>
+                            <th>Book</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsTable">
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: #999;">No transactions recorded yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let books = [];
+        let members = [];
+        let transactions = [];
+        let bookIdCounter = 1;
+        let memberIdCounter = 1;
+        let transactionIdCounter = 1;
+
+        // Initialize with sample data
+        function initializeSampleData() {
+            // Sample books
+            const sampleBooks = [
+                {id: bookIdCounter++, title: "To Kill a Mockingbird", author: "Harper Lee", isbn: "978-0-06-112008-4", genre: "Fiction", year: 1960, copies: 3, available: 2},
+                {id: bookIdCounter++, title: "1984", author: "George Orwell", isbn: "978-0-452-28423-4", genre: "Fiction", year: 1949, copies: 2, available: 1},
+                {id: bookIdCounter++, title: "The Great Gatsby", author: "F. Scott Fitzgerald", isbn: "978-0-7432-7356-5", genre: "Fiction", year: 1925, copies: 4, available: 4}
+            ];
+
+            // Sample members
+            const sampleMembers = [
+                {id: memberIdCounter++, name: "John Doe", email: "john.doe@email.com", phone: "123-456-7890", type: "Regular", borrowedBooks: []},
+                {id: memberIdCounter++, name: "Jane Smith", email: "jane.smith@email.com", phone: "098-765-4321", type: "Student", borrowedBooks: []},
+                {id: memberIdCounter++, name: "Bob Johnson", email: "bob.johnson@email.com", phone: "555-123-4567", type: "Faculty", borrowedBooks: []}
+            ];
+
+            books.push(...sampleBooks);
+            members.push(...sampleMembers);
+            
+            updateAllDisplays();
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Book Management
+        document.getElementById('bookForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('bookTitle').value;
+            const author = document.getElementById('bookAuthor').value;
+            const isbn = document.getElementById('bookISBN').value;
+            const genre = document.getElementById('bookGenre').value;
+            const year = document.getElementById('bookYear').value;
+            const copies = parseInt(document.getElementById('bookCopies').value) || 1;
+
+            const book = {
+                id: bookIdCounter++,
+                title,
+                author,
+                isbn,
+                genre,
+                year: year ? parseInt(year) : null,
+                copies,
+                available: copies
+            };
+
+            books.push(book);
+            this.reset();
+            updateBooksDisplay();
+            updateDashboard();
+            updateDropdowns();
+            
+            alert('Book added successfully!');
+        });
+
+        function updateBooksDisplay() {
+            const tbody = document.getElementById('booksTable');
+            
+            if (books.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">No books added yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = books.map(book => `
+                <tr>
+                    <td>B${book.id.toString().padStart(3, '0')}</td>
+                    <td><strong>${book.title}</strong></td>
+                    <td>${book.author}</td>
+                    <td>${book.genre || 'N/A'}</td>
+                    <td>${book.year || 'N/A'}</td>
+                    <td>
+                        <span class="status ${book.available > 0 ? 'available' : 'borrowed'}">
+                            ${book.available}/${book.copies} Available
+                        </span>
+                    </td>
+                    <td class="actions">
+                        <button class="btn btn-small btn-danger" onclick="deleteBook(${book.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteBook(id) {
+            if (confirm('Are you sure you want to delete this book?')) {
+                books = books.filter(book => book.id !== id);
+                updateBooksDisplay();
+                updateDashboard();
+                updateDropdowns();
+            }
+        }
+
+        // Member Management
+        document.getElementById('memberForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('memberName').value;
+            const email = document.getElementById('memberEmail').value;
+            const phone = document.getElementById('memberPhone').value;
+            const type = document.getElementById('memberType').value;
+
+            // Check for duplicate email
+            if (members.some(member => member.email === email)) {
+                alert('A member with this email already exists!');
+                return;
+            }
+
+            const member = {
+                id: memberIdCounter++,
+                name,
+                email,
+                phone,
+                type,
+                borrowedBooks: [],
+                joinDate: new Date().toISOString().split('T')[0]
+            };
+
+            members.push(member);
+            this.reset();
+            updateMembersDisplay();
+            updateDashboard();
+            updateDropdowns();
+            
+            alert('Member added successfully!');
+        });
+
+        function updateMembersDisplay() {
+            const tbody = document.getElementById('membersTable');
+            
+            if (members.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">No members registered yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = members.map(member => `
+                <tr>
+                    <td>M${member.id.toString().padStart(3, '0')}</td>
+                    <td><strong>${member.name}</strong></td>
+                    <td>${member.email}</td>
+                    <td>${member.phone || 'N/A'}</td>
+                    <td>${member.type}</td>
+                    <td>${member.borrowedBooks.length}</td>
+                    <td class="actions">
+                        <button class="btn btn-small btn-danger" onclick="deleteMember(${member.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteMember(id) {
+            const member = members.find(m => m.id === id);
+            if (member && member.borrowedBooks.length > 0) {
+                alert('Cannot delete member with borrowed books!');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to delete this member?')) {
+                members = members.filter(member => member.id !== id);
+                updateMembersDisplay();
+                updateDashboard();
+                updateDropdowns();
+            }
+        }
+
+        // Transaction Management
+        document.getElementById('transactionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const type = document.getElementById('transactionType').value;
+            const memberId = parseInt(document.getElementById('selectMember').value);
+            const bookId = parseInt(document.getElementById('selectBook').value);
+            const dueDate = document.getElementById('dueDate').value;
+
+            const member = members.find(m => m.id === memberId);
+            const book = books.find(b => b.id === bookId);
+
+            if (!member || !book) {
+                alert('Please select valid member and book!');
+                return;
+            }
+
+            if (type === 'borrow') {
+                if (book.available <= 0) {
+                    alert('This book is not available for borrowing!');
+                    return;
+                }
+
+                if (member.borrowedBooks.length >= 5) {
+                    alert('Member has reached the maximum borrowing limit (5 books)!');
+                    return;
+                }
+
+                // Process borrowing
+                book.available--;
+                member.borrowedBooks.push({
+                    bookId: book.id,
+                    borrowDate: new Date().toISOString().split('T')[0],
+                    dueDate: dueDate
+                });
+
+                const transaction = {
+                    id: transactionIdCounter++,
+                    type: 'borrow',
+                    memberId,
+                    bookId,
+                    memberName: member.name,
+                    bookTitle: book.title,
+                    date: new Date().toISOString().split('T')[0],
+                    dueDate: dueDate,
+                    status: 'Active'
+                };
+
+                transactions.push(transaction);
+                alert('Book borrowed successfully!');
+
+            } else if (type === 'return') {
+                const borrowedBook = member.borrowedBooks.find(bb => bb.bookId === bookId);
+                if (!borrowedBook) {
+                    alert('This member has not borrowed this book!');
+                    return;
+                }
+
+                // Process return
+                book.available++;
+                member.borrowedBooks = member.borrowedBooks.filter(bb => bb.bookId !== bookId);
+
+                const transaction = {
+                    id: transactionIdCounter++,
+                    type: 'return',
+                    memberId,
+                    bookId,
+                    memberName: member.name,
+                    bookTitle: book.title,
+                    date: new Date().toISOString().split('T')[0],
+                    dueDate: borrowedBook.dueDate,
+                    status: 'Completed'
+                };
+
+                transactions.push(transaction);
+                alert('Book returned successfully!');
+            }
+
+            this.reset();
+            updateAllDisplays();
+        });
+
+        // Update transaction type change
+        document.getElementById('transactionType').addEventListener('change', function() {
+            updateBookDropdown();
+        });
+
+        document.getElementById('selectMember').addEventListener('change', function() {
+            updateBookDropdown();
+        });
+
+        function updateBookDropdown() {
+            const type = document.getElementById('transactionType').value;
+            const memberId = parseInt(document.getElementById('selectMember').value);
+            const bookSelect = document.getElementById('selectBook');
+            const dueDateField = document.getElementById('dueDate');
+
+            bookSelect.innerHTML = '<option value="">Select Book</option>';
+
+            if (type === 'borrow') {
+                // Show available books
+                books.filter(book => book.available > 0).forEach(book => {
+                    bookSelect.innerHTML += `<option value="${book.id}">${book.title} by ${book.author}</option>`;
+                });
+                dueDateField.style.display = 'block';
+                // Set default due date (2 weeks from now)
+                const twoWeeksFromNow = new Date();
+                twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+                dueDateField.value = twoWeeksFromNow.toISOString().split('T')[0];
+            } else if (type === 'return' && memberId) {
+                // Show borrowed books for selected member
+                const member = members.find(m => m.id === memberId);
+                if (member) {
+                    member.borrowedBooks.forEach(bb => {
+                        const book = books.find(b => b.id === bb.bookId);
+                        if (book) {
+                            bookSelect.innerHTML += `<option value="${book.id}">${book.title} by ${book.author}</option>`;
+                        }
+                    });
+                }
+                dueDateField.style.display = 'none';
+            }
+        }
+
+        function updateTransactionsDisplay() {
+            const tbody = document.getElementById('transactionsTable');
+            
+            if (transactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">No transactions recorded yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = transactions.slice(-20).reverse().map(transaction => `
+                <tr>
+                    <td>T${transaction.id.toString().padStart(3, '0')}</td>
+                    <td>${transaction.date}</td>
+                    <td>
+                        <span class="status ${transaction.

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alphabet Counter</title>
+  <style>
+    body {
+      text-align: center;
+      margin-top: 100px;
+      font-family: Arial, sans-serif;
+    }
+
+    #output {
+      font-size: 120px;   /* VERY BIG */
+      font-weight: bold;
+      margin: 40px 0;
+    }
+
+    button {
+      font-size: 20px;
+      padding: 10px 30px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Alphabet Counter</h1>
+  <div id="output">A</div>
+  <button onclick="startCounter()">Start</button>
+
+  <script>
+    let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let index = 0;
+    let interval;
+
+    function startCounter() {
+      clearInterval(interval);
+      index = 0;
+
+      // Start looping A-Z
+      interval = setInterval(() => {
+        document.getElementById("output").innerText = letters[index];
+        index = (index + 1) % letters.length;
+      }, 10); // speed (100ms)
+
+      // Stop after 10 seconds
+      setTimeout(() => {
+        clearInterval(interval);
+        let randomIndex = Math.floor(Math.random() * letters.length);
+        document.getElementById("output").innerText = letters[randomIndex];
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>
